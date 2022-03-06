@@ -22,7 +22,7 @@ AssetLoader.prototype.loadImages = function loadImages(names, callback) {
         name = names[n];
         result[name] = document.createElement('img');
         result[name].addEventListener('load', onload);
-        result[name].src = "/img/" + name + ".png";
+        result[name].src = "img/" + name + ".png";
     }
     
     return result;
