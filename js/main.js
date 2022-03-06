@@ -1,10 +1,11 @@
 //custom even Listener setup
-signal = new Signal();
+var signal = new Signal();
 
 //canvas setup
 
 canvas = document.getElementById("canvas");
 canvasContext = canvas.getContext("2d");
+canvas.imageSmoothingEnabled = false;
 canvas.width = 320;
 canvas.height = 180;
 
@@ -33,6 +34,7 @@ const soundList = [
 ]
 
 function init(){
+    
     loadImages();
     
 }
@@ -98,11 +100,17 @@ function gameLoop() {
             creditsScreen.update();
             break;
     }
+    Key.update();
 }
 
 function soundInit(){ 
         loader.soundLoader({context: audio.context, urlList: soundList, callback: loadingComplete});
         loader.loadAudioBuffer();
 }
+
+window.addEventListener('keyup',    function (event) { Key.onKeyup(event); event.preventDefault() }, false);
+window.addEventListener('keydown',  function (event) { Key.onKeydown(event); event.preventDefault() }, false);
+window.addEventListener('blur',     function (event) { paused = true; }, false);
+window.addEventListener('focus',    function (event) { paused = false; }, false);
 
 init();

@@ -8,6 +8,7 @@ const Signal = function Signal(){
 }
 
 Signal.prototype.dispatch = function dispatch(eventName, params={}){
+    console.log('dispatching event: ' + eventName);
     var event = new CustomEvent(eventName, {detail: params});
     this.dispatchEvent(event);
 }
@@ -24,7 +25,8 @@ signal.dispatch('bulletHitWall', {x: bullet.x, y: bullet.y })
 
 
 function bulletSplode(event){
-    emitParticles(event.x, event.y);
+    let action = event.detail;
+    emitParticles(action.x, action.y);
 }
 
 */

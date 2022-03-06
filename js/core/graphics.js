@@ -74,42 +74,21 @@ function pset(x,y, color='#FF00FF'){
     canvasContext.fillRect(x,y, 1, 1);
 }
 
-function onScreen(position, width = 0, height = 0){
+function onScreen(position, width = 0, height = 0,){
 
-    let padding = 50;
     let x = position.x;
     let y = position.y;
-    
-/*    let left =   ((-offset.x-padding-cam.x)/cam.scale);
-    let top =    ((-offset.y-padding-cam.y)/cam.scale);
-    let right =  ((offset.x+padding-cam.x)/cam.scale);
-    let bottom = ((offset.y+padding-cam.y)/cam.scale);*/
+
+    //none of this is right, also needs to account for padding
+    //TODO: rewrite as AABB check instead of point in rect
     const left = view.x - width;
     const top = view.y - height;
-    const right = view.x + G.c.width;
-    const bottom = view.y + G.c.height;
+    const right = view.x + canvas.width;
+    const bottom = view.y + canvas.height;
 
   return x > left && x < right && y > top && y < bottom
-
-  //return true;
   
 }
-
-
-function drawTile(x, y, world, gid, tileset){
-        let {img, ctx, tileSheetSize} = G
-        ctx.drawImage(
-            tileset,
-            gid%tileSheetSize.height * world.tileSize,
-            Math.floor(gid/tileSheetSize.width) * world.tileSize,
-            world.tileSize,
-            world.tileSize,
-            x,
-            y,
-            world.tileSize, world.tileSize
-            );
-}
-
 function spriteFont({
     width, 
     height,  
@@ -132,17 +111,17 @@ function spriteFont({
         return this;
     }
 
-spriteFont.prototype.drawText = function drawText(textString, pos={x: 0, y: 0}, hspacing=0, vspacing = 2){
+spriteFont.prototype.drawText = function drawText(textString, pos={x: 0, y: 0}, hspacing=0, vspacing = 2, scale=1){
     if (!textString) return;
     var lines = textString.split("\n");
     var self = this;
     self.pos = pos, self.hspacing = hspacing, self.vspacing = vspacing;
     lines.forEach(function(line, index, arr){
-        self.textLine( { textString:line, pos:{x: self.pos.x, y: self.pos.y + index * (self.characterHeight + self.vspacing) }, hspacing: self.hspacing } )
+        self.textLine( { textString:line, pos:{x: self.pos.x, y: self.pos.y + index * (self.characterHeight + self.vspacing)*scale }, hspacing: self.hspacing }, scale )
     })
 }
 
-spriteFont.prototype.textLine = function textLine({ textString, pos={x: 0, y: 0}, hspacing=0 } = {}){
+spriteFont.prototype.textLine = function textLine({ textString, pos={x: 0, y: 0}, hspacing=0 } = {}, scale=1){
     var textStringArray = textString.split("");
     var self = this;
 
@@ -154,47 +133,20 @@ spriteFont.prototype.textLine = function textLine({ textString, pos={x: 0, y: 0}
         let spriteY = Math.floor( keyIndex / self.widthInCharacters ) * self.characterHeight;
         //draw
         //console.log(character);
-        
+        canvasContext.imageSmoothingEnabled = false;
         canvasContext.drawImage(
             self.image,
             spriteX,
             spriteY,
             self.characterWidth,
             self.characterHeight,
-            pos.x + ( (self.characterWidth + hspacing) * index),
+            pos.x + ( (self.characterWidth + hspacing) * index * scale),
             pos.y,
-            self.characterWidth,
-            self.characterHeight
+            self.characterWidth * scale,
+            self.characterHeight * scale
         )
         //console.log(keyIndex);
     })
-}
-
-function preRenderBlendedSprite({img, blendmode, color}={}){
-    var stencilCanvas = document.createElement('canvas');
-    stencilCanvas.width = img.width;
-    stencilCanvas.height = img.height;
-    var stencilCTX = stencilCanvas.getContext('2d');
-    stencilCTX.drawImage(img, 0,0);
-    //set composite mode to stencil, we want to fillbucket with color but preserve alpha
-    stencilCTX.globalCompositeOperation = 'source-atop';
-    //fillRect over entire stencilcanvas
-    stencilCTX.fillStyle = color;
-    stencilCTX.fillRect(0,0,stencilCanvas.width, stencilCanvas.height);
-
-    var blendedCanvas = document.createElement('canvas')
-    blendedCanvas.width = img.width;
-    blendedCanvas.height = img.height;
-    var blendedCTX = blendedCanvas.getContext('2d');
-    blendedCTX.drawImage(img, 0,0);
-    //set composite mode to blendmode
-    blendedCTX.globalCompositeOperation = blendmode;
-    //draw fillbucket'd canvas overtop
-    blendedCTX.drawImage(stencilCanvas, 0, 0);
-
-    
-    //return blendedCanvas
-    return blendedCanvas; 
 }
 
 

@@ -43,14 +43,13 @@ const Key = {
     },
 
     onKeydown(event) {
-        if (/* not global: soundEnabled &&*/ G.audio && !G.audio.initialized) G.audio.init(); // FIX browser permission errors
+        if (audio && !audio.initialized) audio.init();
         this._pressed[event.keyCode] = true;
     },
 
     onKeyup(event) {
         this._released[event.keyCode] = true;
         delete this._pressed[event.keyCode];
-
     },
 
     update() {
