@@ -24,12 +24,8 @@ var titleScreen = {
         }
         
         //title text
-        canvasContext.fillStyle = 'white';
-        canvasContext.fillRect(this.box.x, this.box.y, 10, 10);
         gameFont.drawText("Minimum Viable Game", { x: 10, y: 10 }, 0, 0, 2);
         gameFont.drawText("Press Z to Start", { x: 10, y: 30 }, 0, 0);
-        tinyFont.drawText(`BOX X: ${this.box.x}`, { x: 10, y: 160 }, 0, 0);
-        tinyFont.drawText(`BOX Y: ${this.box.y}`, { x: 10, y: 170 }, 0, 0);
 
     },
 

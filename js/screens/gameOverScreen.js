@@ -7,10 +7,16 @@ var gameOverScreen = {
     draw: function () {
         canvasContext.fillStyle = 'black';
         canvasContext.fillRect(0, 0, canvas.width, canvas.height);
-        canvasContext.fillStyle = 'white';
-        canvasContext.fillRect(this.box.x, this.box.y, 10, 10);
+        
+         //feedback! draw a polygon for how many hits you've made
+         for(let i = 0; i < this.gameEndState.hitCounter; i++){
+            canvasContext.strokeStyle = `#DD0000`;
+
+            strokePolygon(canvas.width/2, canvas.height/2, 3*i, 7, ticker/100*i/2);
+            
+        }
         gameFont.drawText(`You pounded the z key ${this.gameEndState.hitCounter} times`, { x: 10, y: 10 }, 0, 0);
-        gameFont.drawText("GAME OVER", { x: 110, y: 100 }, 0, 1, 3);
+        gameFont.drawText("GAME OVER", { x: 30, y: 70 }, 0, 1, 5);
         gameFont.drawText("Press Enter to return to titleScreen\nPress SPACE to try again", { x: 90, y: 150 }, 0, 1);
     },
     update: function () {
