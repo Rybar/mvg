@@ -43,7 +43,7 @@ const Key = {
     },
 
     onKeydown(event) {
-        if (audio && !audio.initialized) audio.init();
+        if (audio && !audio.initialized) audio.init(loadSounds);
         this._pressed[event.keyCode] = true;
     },
 
